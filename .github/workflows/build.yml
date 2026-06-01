@@ -1,0 +1,56 @@
+name: Build CanliTV APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Sign APK
+        run: |
+          keytool -genkey -v \
+            -keystore keystore.jks \
+            -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -alias canlitv \
+            -dname "CN=CanliTV, OU=App, O=CanliTV, L=NL, S=NL, C=NL" \
+            -storepass canlitv123 \
+            -keypass canlitv123
+
+          BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools/ | sort -V | tail -1)
+          APK_PATH=$(find app/build/outputs/apk/release/ -name "*.apk" | head -1)
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner sign \
+            --ks keystore.jks \
+            --ks-pass pass:canlitv123 \
+            --key-pass pass:canlitv123 \
+            --out CanliTV.apk \
+            "$APK_PATH"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CanliTV-APK
+          path: CanliTV.apk
+          retention-days: 30
