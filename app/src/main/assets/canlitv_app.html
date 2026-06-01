@@ -4,22 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Canlı TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
-
   :root {
-    --bg: #0a0a0f;
-    --surface: #141420;
-    --surface2: #1e1e2e;
+    --bg: #0d0d0d;
+    --surface: #1a1a1a;
     --accent: #e50914;
-    --accent2: #ff6b35;
-    --text: #ffffff;
-    --text2: #aaaacc;
-    --text3: #666688;
-    --card-w: 160px;
-    --card-h: 95px;
-    --radius: 8px;
-    --focused: #e50914;
+    --text: #fff;
+    --text2: #b3b3b3;
+    --text3: #555;
+    --card-w: 165px;
+    --card-h: 98px;
+    --radius: 6px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,1114 +23,545 @@
   html, body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', Arial, sans-serif;
     overflow: hidden;
-    width: 100vw;
-    height: 100vh;
+    width: 100vw; height: 100vh;
     user-select: none;
     -webkit-user-select: none;
   }
 
-  /* ─── SCREENS ─── */
-  .screen { position: absolute; inset: 0; display: none; flex-direction: column; }
-  .screen.active { display: flex; }
-
-  /* ─── HOME SCREEN ─── */
-  #home-screen {
-    background: var(--bg);
-  }
-
-  .header {
-    display: flex;
-    align-items: center;
-    padding: 18px 30px 12px;
-    gap: 30px;
-    background: linear-gradient(to bottom, rgba(10,10,15,0.98) 0%, rgba(10,10,15,0.0) 100%);
-    position: relative;
-    z-index: 10;
-    flex-shrink: 0;
+  /* ── NAVBAR ── */
+  .navbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; align-items: center;
+    padding: 0 48px; height: 64px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%);
+    z-index: 20; gap: 32px;
   }
 
   .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    flex-shrink: 0;
+    font-size: 26px; font-weight: 900; color: var(--accent);
+    letter-spacing: -0.5px; flex-shrink: 0;
+    text-shadow: 0 0 20px rgba(229,9,20,0.5);
   }
+  .logo span { color: #fff; }
 
-  .nav-tabs {
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-  }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
 
-  .nav-tab {
-    padding: 7px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text2);
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1.5px solid transparent;
+  .nav-link {
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    cursor: pointer; padding: 5px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
     white-space: nowrap;
   }
+  .nav-link.active { color: var(--text); border-bottom-color: var(--accent); }
+  .nav-link.focused { color: var(--text); outline: none; }
 
-  .nav-tab.active-cat { color: var(--text); background: var(--accent); }
-  .nav-tab.focused { border-color: var(--text); color: var(--text); outline: none; }
-
-  .hero-section {
-    position: relative;
-    flex-shrink: 0;
-    height: 200px;
-    overflow: hidden;
-    margin: 0;
+  .live-pill {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(229,9,20,0.12);
+    border: 1px solid rgba(229,9,20,0.35);
+    padding: 5px 14px; border-radius: 20px;
   }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #1a0a2e 0%, #0d1a3a 50%, #1a0d2e 100%);
-  }
-
-  .hero-content {
-    position: absolute;
-    bottom: 20px;
-    left: 30px;
-    z-index: 2;
-  }
-
-  .hero-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    color: var(--accent2);
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
-    letter-spacing: 1px;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .hero-desc {
-    font-size: 12px;
-    color: var(--text2);
-    max-width: 300px;
-  }
-
-  .hero-decoration {
-    position: absolute;
-    right: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .hero-badge {
-    background: var(--accent);
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
   .live-dot {
-    width: 8px;
-    height: 8px;
-    background: #00ff88;
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
+    width: 7px; height: 7px;
+    background: var(--accent); border-radius: 50%;
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .live-text { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 200px; position: relative;
+    flex-shrink: 0; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(13,13,13,0.97) 35%, transparent 72%),
+      linear-gradient(to top,   rgba(13,13,13,1)    0%,  transparent 55%),
+      radial-gradient(ellipse at 75% 50%, #1c0808 0%, #0d0d0d 65%);
+  }
+  .hero-content {
+    position: absolute; bottom: 24px; left: 48px; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 9px; font-weight: 800; letter-spacing: 4px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .hero-title { font-size: 36px; font-weight: 900; line-height: 1; letter-spacing: -1px; margin-bottom: 6px; }
+  .hero-sub { font-size: 12px; color: var(--text2); }
+
+  .hero-stats {
+    position: absolute; right: 56px; top: 50%; transform: translateY(-50%);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px; padding: 10px 14px; text-align: center;
+  }
+  .stat-num { font-size: 20px; font-weight: 900; color: var(--accent); line-height: 1; }
+  .stat-lbl { font-size: 8px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  /* ── MAIN LAYOUT ── */
+  #home-screen {
+    display: flex; flex-direction: column;
+    width: 100vw; height: 100vh;
   }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
+  .content-area {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 8px 48px 32px;
+    scrollbar-width: thin; scrollbar-color: #2a2a2a transparent;
   }
+  .content-area::-webkit-scrollbar { width: 3px; }
+  .content-area::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
-  .channels-container {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0 30px 30px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
+  /* ── ROW ── */
+  .row { margin-bottom: 28px; }
+  .row-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .row-title { font-size: 15px; font-weight: 700; }
+  .row-count {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    background: rgba(229,9,20,0.1); padding: 2px 8px; border-radius: 10px;
   }
-
-  .channels-container::-webkit-scrollbar { width: 4px; }
-  .channels-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
-  .channels-container::-webkit-scrollbar-track { background: transparent; }
-
-  .row-section { margin-bottom: 28px; }
-
-  .row-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .row-title-accent {
-    width: 3px;
-    height: 16px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
   .channel-row {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding-bottom: 8px;
+    display: flex; gap: 9px;
+    overflow-x: auto; padding-bottom: 4px;
     scrollbar-width: none;
   }
-
   .channel-row::-webkit-scrollbar { display: none; }
 
+  /* ── CARD ── */
   .channel-card {
     flex-shrink: 0;
-    width: var(--card-w);
-    height: var(--card-h);
-    background: var(--surface);
+    width: var(--card-w); height: var(--card-h);
     border-radius: var(--radius);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    cursor: pointer; position: relative; overflow: hidden;
     border: 2px solid transparent;
-    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    transition: transform 0.15s ease, border-color 0.15s, box-shadow 0.15s;
+    background: var(--surface);
   }
-
-  .channel-card:hover {
-    transform: scale(1.05);
-    border-color: var(--accent);
-    box-shadow: 0 0 20px rgba(229,9,20,0.4);
+  .card-color-layer {
+    position: absolute; inset: 0;
+    opacity: 0.55; transition: opacity 0.15s;
   }
+  .channel-card.focused .card-color-layer { opacity: 0.75; }
 
   .channel-card.focused {
-    transform: scale(1.08);
-    border-color: var(--focused);
-    box-shadow: 0 0 25px rgba(229,9,20,0.6), 0 0 0 2px rgba(229,9,20,0.3);
-    outline: none;
-    z-index: 5;
+    transform: scale(1.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 8px 28px rgba(229,9,20,0.45);
+    outline: none; z-index: 5;
+  }
+  .channel-card:hover:not(.focused) {
+    transform: scale(1.04);
+    border-color: rgba(255,255,255,0.25);
   }
 
-  .channel-card-bg {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-    background: linear-gradient(135deg, var(--accent) 0%, transparent 70%);
+  .card-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 7px; padding: 8px;
   }
-
-  .channel-logo-container {
-    width: 50px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .card-logo-wrap {
+    width: 68px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
   }
-
-  .channel-logo-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    filter: brightness(1.1);
+  .card-logo-img {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    filter: brightness(1.15) drop-shadow(0 1px 5px rgba(0,0,0,0.9));
   }
-
-  .channel-logo-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    color: var(--text);
-    text-align: center;
-    letter-spacing: 1px;
+  .card-name-text {
+    font-size: 11px; font-weight: 700; color: #fff;
+    text-align: center; letter-spacing: 0.3px;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+    line-height: 1.2; max-width: 100%;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-
-  .channel-name {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text2);
-    text-align: center;
-    padding: 0 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+  .card-name-sub {
+    font-size: 9px; color: rgba(255,255,255,0.65);
+    text-align: center; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; max-width: 100%;
   }
 
   .live-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: var(--accent);
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 3px;
-    letter-spacing: 0.5px;
+    position: absolute; top: 6px; right: 6px;
+    background: var(--accent); font-size: 8px; font-weight: 800;
+    padding: 2px 5px; border-radius: 3px; letter-spacing: 1.5px;
+  }
+  .play-overlay {
+    position: absolute; inset: 0;
+    background: rgba(229,9,20,0.0);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+  .channel-card.focused .play-overlay { opacity: 1; background: rgba(229,9,20,0.1); }
+  .play-icon {
+    width: 30px; height: 30px;
+    background: rgba(229,9,20,0.9); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; padding-left: 2px;
   }
 
-  /* ─── PLAYER SCREEN ─── */
-  #player-screen {
-    background: #000;
-    position: relative;
+  /* ── HINT BAR ── */
+  .hint-bar {
+    background: rgba(0,0,0,0.7);
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 6px 48px; display: flex; gap: 22px; flex-shrink: 0;
+  }
+  .hint-item { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
+  .hint-key {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 3px; padding: 1px 6px;
+    font-size: 9px; font-weight: 700; color: var(--text2);
   }
 
-  #iframe-wrapper {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
-  #channel-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
-
-  /* Player overlay UI */
-  #player-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  #player-overlay.visible { opacity: 1; pointer-events: all; }
-
-  /* Gradient overlays */
-  .overlay-top {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
-    padding: 16px 20px 30px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .overlay-bottom {
-    margin-top: auto;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-    padding: 30px 20px 16px;
-  }
-
-  /* Back button */
-  .back-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    border: 1.5px solid rgba(255,255,255,0.3);
-    font-size: 16px;
-    transition: all 0.2s;
-    backdrop-filter: blur(4px);
-  }
-
-  .back-btn:hover, .back-btn.focused { background: var(--accent); border-color: var(--accent); transform: scale(1.1); }
-
-  .player-channel-info { flex: 1; }
-
-  .player-channel-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 1px;
-    line-height: 1;
-  }
-
-  .player-live-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--accent);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
-
-  /* Yayin tabs */
-  .yayin-section { margin-bottom: 10px; }
-
-  .yayin-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text3);
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .yayin-tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .yayin-tab {
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    background: rgba(255,255,255,0.08);
-    color: var(--text2);
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
-    min-width: 70px;
-    text-align: center;
-  }
-
-  .yayin-tab:hover { border-color: var(--accent); color: var(--text); }
-  .yayin-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .yayin-tab.focused { border-color: #fff; color: #fff; box-shadow: 0 0 12px rgba(229,9,20,0.5); outline: none; transform: scale(1.05); }
-  .yayin-tab.active.focused { box-shadow: 0 0 15px rgba(229,9,20,0.8); }
-
-  /* Quality selector */
-  .quality-section { display: flex; align-items: center; gap: 12px; }
-
-  .quality-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text3);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .quality-tabs {
-    display: flex;
-    gap: 6px;
-  }
-
-  .quality-tab {
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: 1.5px solid rgba(255,255,255,0.15);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    background: rgba(255,255,255,0.06);
-    color: var(--text3);
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
-  }
-
-  .quality-tab:hover { border-color: rgba(255,255,255,0.4); color: var(--text2); }
-  .quality-tab.active { background: rgba(255,165,0,0.25); border-color: #ffb347; color: #ffb347; }
-  .quality-tab.focused { border-color: #fff; color: #fff; outline: none; transform: scale(1.08); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
-  .quality-tab.active.focused { box-shadow: 0 0 12px rgba(255,179,71,0.6); }
-
-  /* Bottom controls row */
-  .player-controls-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-  }
-
-  /* Loading state */
-  #player-loading {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    transition: opacity 0.5s;
-  }
-
-  #player-loading.hidden { opacity: 0; pointer-events: none; }
-
-  .spinner {
-    width: 44px;
-    height: 44px;
-    border: 3px solid rgba(255,255,255,0.1);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-size: 13px;
-    color: var(--text2);
-    font-weight: 500;
-    letter-spacing: 1px;
-  }
-
-  .loading-channel {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--accent);
-    letter-spacing: 2px;
-  }
-
-  /* Focus ring for accessibility */
-  :focus { outline: none; }
-
-  /* Channel number badge on card */
-  .channel-number {
-    position: absolute;
-    bottom: 6px;
-    left: 8px;
-    font-size: 9px;
-    color: var(--text3);
-    font-weight: 600;
-  }
-
-  /* Scrollbar for channels-container custom */
-  .channels-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-
-  /* Toast notification */
+  /* ── TOAST ── */
   #toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(30,30,46,0.95);
-    border: 1px solid rgba(229,9,20,0.4);
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 13px;
-    color: var(--text);
-    z-index: 1000;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-    backdrop-filter: blur(10px);
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(14px);
+    background: rgba(18,18,18,0.97);
+    border: 1px solid rgba(229,9,20,0.3);
+    border-radius: 6px; padding: 9px 20px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    z-index: 9999; opacity: 0; transition: all 0.22s;
+    pointer-events: none; backdrop-filter: blur(10px);
     white-space: nowrap;
   }
-
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* Channel info panel on player */
-  .player-channel-logo {
-    width: 40px;
-    height: 28px;
-    object-fit: contain;
-    filter: brightness(1.2) drop-shadow(0 0 4px rgba(255,255,255,0.3));
-  }
-
-  /* Instruction hint */
-  .hint-bar {
-    background: rgba(20,20,32,0.7);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 6px 20px;
-    display: flex;
-    gap: 20px;
-    flex-shrink: 0;
-  }
-
-  .hint-item {
-    font-size: 10px;
-    color: var(--text3);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .hint-key {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--text2);
-  }
+  :focus { outline: none; }
 </style>
 </head>
 <body>
 
-<!-- HOME SCREEN -->
-<div id="home-screen" class="screen active">
-  <div class="header">
-    <div class="logo">📺 CANLI TV</div>
-    <div class="nav-tabs" id="cat-tabs">
-      <div class="nav-tab active-cat focused" data-cat="all" tabindex="0">Tümü</div>
-      <div class="nav-tab" data-cat="ulusal" tabindex="0">Ulusal</div>
-      <div class="nav-tab" data-cat="haber" tabindex="0">Haber</div>
-      <div class="nav-tab" data-cat="spor" tabindex="0">Spor</div>
-      <div class="nav-tab" data-cat="muzik" tabindex="0">Müzik</div>
-    </div>
-  </div>
+<div id="home-screen">
 
-  <div class="hero-section">
+  <!-- Hero -->
+  <div class="hero">
     <div class="hero-bg"></div>
+    <div class="navbar">
+      <div class="logo">CANLI<span>TV</span></div>
+      <nav class="nav-links" id="cat-nav">
+        <div class="nav-link active focused" data-cat="all"    tabindex="0">Tümü</div>
+        <div class="nav-link"               data-cat="ulusal"  tabindex="0">Ulusal</div>
+        <div class="nav-link"               data-cat="haber"   tabindex="0">Haber</div>
+        <div class="nav-link"               data-cat="spor"    tabindex="0">Spor</div>
+        <div class="nav-link"               data-cat="muzik"   tabindex="0">Müzik</div>
+        <div class="nav-link"               data-cat="cocuk"   tabindex="0">Çocuk</div>
+      </nav>
+      <div class="live-pill">
+        <div class="live-dot"></div>
+        <div class="live-text">CANLI</div>
+      </div>
+    </div>
     <div class="hero-content">
-      <div class="hero-label">🔴 Canlı Yayın</div>
+      <div class="hero-eyebrow">🔴 HD Kesintisiz Yayın</div>
       <div class="hero-title">TÜM KANALLAR</div>
-      <div class="hero-desc">HD kalitede, kesintisiz Türk TV kanalları</div>
+      <div class="hero-sub">100+ Türk TV kanalı, ücretsiz</div>
     </div>
-    <div class="hero-decoration">
-      <div class="live-dot"></div>
-      <div class="hero-badge">HD</div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">100+</div><div class="stat-lbl">Kanal</div></div>
+      <div class="stat"><div class="stat-num">HD</div><div class="stat-lbl">Kalite</div></div>
+      <div class="stat"><div class="stat-num">0₺</div><div class="stat-lbl">Ücretsiz</div></div>
+      <div class="stat"><div class="stat-num">24/7</div><div class="stat-lbl">Canlı</div></div>
     </div>
   </div>
 
-  <div class="channels-container" id="channels-container">
-    <!-- rows injected by JS -->
-  </div>
+  <!-- Kanalen rijen -->
+  <div class="content-area" id="content-area"></div>
 
+  <!-- Hint bar -->
   <div class="hint-bar">
-    <div class="hint-item"><span class="hint-key">↑↓←→</span> Navigeer</div>
-    <div class="hint-item"><span class="hint-key">OK / Enter</span> Openen</div>
-    <div class="hint-item"><span class="hint-key">Back</span> Terug</div>
+    <div class="hint-item"><span class="hint-key">↑↓←→</span> Gezin</div>
+    <div class="hint-item"><span class="hint-key">OK / Enter</span> İzle</div>
+    <div class="hint-item"><span class="hint-key">Back</span> Geri</div>
   </div>
 </div>
 
-<!-- PLAYER SCREEN -->
-<div id="player-screen" class="screen">
-  <div id="player-loading">
-    <div class="loading-channel" id="loading-name">KANAL D</div>
-    <div class="spinner"></div>
-    <div class="loading-text">Yükleniyor...</div>
-  </div>
-
-  <div id="iframe-wrapper">
-    <iframe id="channel-iframe" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-  </div>
-
-  <div id="player-overlay">
-    <!-- Top bar -->
-    <div class="overlay-top">
-      <div class="back-btn focused" id="back-btn" tabindex="0">&#8592;</div>
-      <div class="player-channel-info">
-        <div class="player-channel-name" id="player-channel-name">KANAL D</div>
-        <div class="player-live-badge">
-          <div class="live-dot"></div>
-          CANLI
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom bar -->
-    <div class="overlay-bottom">
-      <div class="player-controls-row">
-        <!-- Yayin tabs -->
-        <div class="yayin-section">
-          <div class="yayin-label">Yayın Kaynağı</div>
-          <div class="yayin-tabs" id="yayin-tabs">
-            <div class="yayin-tab active focused" data-yayin="1" tabindex="0">1. Yayın</div>
-            <div class="yayin-tab" data-yayin="2" tabindex="0">2. Yayın</div>
-            <div class="yayin-tab" data-yayin="3" tabindex="0">3. Yayın</div>
-            <div class="yayin-tab" data-yayin="4" tabindex="0">4. Yayın</div>
-          </div>
-        </div>
-
-        <!-- Quality -->
-        <div class="quality-section">
-          <div class="quality-label">Kalite</div>
-          <div class="quality-tabs" id="quality-tabs">
-            <div class="quality-tab" data-q="360" tabindex="0">360p</div>
-            <div class="quality-tab" data-q="480" tabindex="0">480p</div>
-            <div class="quality-tab active" data-q="720" tabindex="0">720p</div>
-            <div class="quality-tab" data-q="HD" tabindex="0">HD</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
 <div id="toast"></div>
 
 <script>
-// ─── CHANNEL DATA ───────────────────────────────────────────
-const CHANNELS = {
-  populer: {
-    label: "⭐ Popüler Kanallar",
-    cat: "ulusal",
-    channels: [
-      { name: "TRT 1",     slug: "trt1-canli-kesintisiz-izle",   color: "#003087" },
-      { name: "Kanal D",   slug: "kanaldcanli-hd-izle",           color: "#c8002d" },
-      { name: "ATV",       slug: "atvcanliyayin-izle",             color: "#ff6600" },
-      { name: "Now TV",    slug: "nowtvcanlihd",                   color: "#e50914" },
-      { name: "Star TV",   slug: "startvcanlihdizle",              color: "#ffd700" },
-      { name: "Show TV",   slug: "showtv-canli-izle",              color: "#009bde" },
-      { name: "Fox TV",    slug: "foxtvcanli-hd-izle",             color: "#ffcc00" },
-      { name: "TV8",       slug: "tv8canli-kesintisiz-izle",       color: "#e50914" },
-      { name: "Kanal 7",   slug: "kanal7canli-hd-izle",            color: "#00aa44" },
-    ]
-  },
-  haber: {
-    label: "📰 Haber Kanalları",
-    cat: "haber",
-    channels: [
-      { name: "NTV",           slug: "ntvcanlihd-izle",           color: "#003087" },
-      { name: "CNN Türk",      slug: "cnnturkcanli-hd",            color: "#cc0000" },
-      { name: "A Haber",       slug: "ahaber-canli",               color: "#e50914" },
-      { name: "TRT Haber",     slug: "trthabercanli-hd",           color: "#003087" },
-      { name: "Habertürk",     slug: "haberturkcanli-hd-izle",     color: "#002366" },
-      { name: "Sözcü TV",      slug: "sozcutvcanli-hd",            color: "#cc0000" },
-      { name: "Halk TV",       slug: "halk-tv-canli-kesintisiz",   color: "#dd0000" },
-      { name: "Flash Haber",   slug: "flashhaber-canli",           color: "#ff6600" },
-    ]
-  },
-  spor: {
-    label: "⚽ Spor Kanalları",
-    cat: "spor",
-    channels: [
-      { name: "TRT Spor",        slug: "trtsporcanli-izle",        color: "#003087" },
-      { name: "TRT Spor Yıldız", slug: "trtsporyildiz-hd",         color: "#005bcc" },
-      { name: "A Spor",          slug: "asporcanli",               color: "#e50914" },
-      { name: "Bein Spor Haber", slug: "beinsportshaber-hd",       color: "#00aaff" },
-      { name: "CBC Sport",       slug: "cbcsport-hd",              color: "#003087" },
-      { name: "GS TV",           slug: "gstv",                     color: "#ffcc00" },
-      { name: "FB TV",           slug: "fbtv",                     color: "#003087" },
-      { name: "Beşiktaş TV",     slug: "besiktastv",               color: "#1a1a1a" },
-    ]
-  },
-  muzik: {
-    label: "🎵 Müzik Kanalları",
-    cat: "muzik",
-    channels: [
-      { name: "Kral TV",       slug: "kral-tv-canli-hd",           color: "#9900cc" },
-      { name: "Kral Pop",      slug: "kral-pop-hd",                color: "#cc0066" },
-      { name: "TRT Müzik",     slug: "trtmuzikcanli-hd",           color: "#003087" },
-      { name: "Dream Türk",    slug: "dreamturkcanli-hd",          color: "#6600cc" },
-      { name: "Power Türk TV", slug: "powerturk-tv",               color: "#ff6600" },
-      { name: "Number One TV", slug: "number-one-tv",              color: "#cc0000" },
-    ]
-  },
-  diger: {
-    label: "📺 Diğer Kanallar",
-    cat: "all",
-    channels: [
-      { name: "TRT Çocuk",    slug: "trtcocuk-canli-hd",           color: "#00aa44" },
-      { name: "Cartoon Net",  slug: "cartoonnetwork",              color: "#00aa66" },
-      { name: "TRT 2",        slug: "trt2canlihd-izle",            color: "#003087" },
-      { name: "TRT World",    slug: "trtworldcanlihd",             color: "#003087" },
-      { name: "D Max",        slug: "dmax-canli-hd",               color: "#ff6600" },
-      { name: "TV8,5",        slug: "tv85canli-hd-izle",           color: "#e50914" },
-      { name: "Bloomberg HT", slug: "bloomberght-hd-live",         color: "#003087" },
-      { name: "Euro D",       slug: "eurodcanli-hd",               color: "#c8002d" },
-    ]
-  }
-};
+// ═══════════════════════════════════════════════════
+// KANALEN DATA  (slug = canlitv.me URL pad)
+// ═══════════════════════════════════════════════════
+const SECTIONS = [
+  { id:"populer", label:"⭐ Popüler Kanallar", cat:"all", channels:[
+    { name:"TRT 1",    slug:"trt1-canli-kesintisiz-izle",  color:"#00204e" },
+    { name:"Kanal D",  slug:"kanaldcanli-hd-izle",          color:"#8b0000" },
+    { name:"ATV",      slug:"atvcanliyayin-izle",            color:"#cc3300" },
+    { name:"Now TV",   slug:"nowtvcanlihd",                  color:"#1a1a1a" },
+    { name:"Star TV",  slug:"startvcanlihdizle",             color:"#111133" },
+    { name:"Show TV",  slug:"showtv-canli-izle",             color:"#003366" },
+    { name:"Fox TV",   slug:"foxtvcanli-hd-izle",            color:"#111100" },
+    { name:"TV8",      slug:"tv8canli-kesintisiz-izle",      color:"#6b0000" },
+    { name:"Kanal 7",  slug:"kanal7canli-hd-izle",           color:"#003300" },
+    { name:"TV8,5",    slug:"tv85canli-hd-izle",             color:"#550011" },
+  ]},
+  { id:"ulusal", label:"📺 Ulusal Kanallar", cat:"ulusal", channels:[
+    { name:"TRT 1",       slug:"trt1-canli-kesintisiz-izle", color:"#00204e" },
+    { name:"TRT 2",       slug:"trt2canlihd-izle",            color:"#003366" },
+    { name:"TRT Türk",    slug:"trtturkcanli-hd",             color:"#002244" },
+    { name:"Kanal D",     slug:"kanaldcanli-hd-izle",         color:"#8b0000" },
+    { name:"ATV",         slug:"atvcanliyayin-izle",           color:"#cc3300" },
+    { name:"Now TV",      slug:"nowtvcanlihd",                 color:"#1a1a1a" },
+    { name:"Star TV",     slug:"startvcanlihdizle",            color:"#111133" },
+    { name:"Show TV",     slug:"showtv-canli-izle",            color:"#003366" },
+    { name:"Fox TV",      slug:"foxtvcanli-hd-izle",           color:"#111100" },
+    { name:"TV8",         slug:"tv8canli-kesintisiz-izle",     color:"#6b0000" },
+    { name:"Kanal 7",     slug:"kanal7canli-hd-izle",          color:"#003300" },
+    { name:"D Max",       slug:"dmax-canli-hd",                color:"#221100" },
+    { name:"Euro D",      slug:"eurodcanli-hd",                color:"#550022" },
+    { name:"Euro Star",   slug:"eurostar-canli-hd",            color:"#003322" },
+    { name:"TLC",         slug:"tlctv-canli-hd",               color:"#003322" },
+    { name:"ATV Avrupa",  slug:"atvavrupa-canli",              color:"#441100" },
+  ]},
+  { id:"haber", label:"📰 Haber Kanalları", cat:"haber", channels:[
+    { name:"NTV",          slug:"ntvcanlihd-izle",          color:"#00204e" },
+    { name:"CNN Türk",     slug:"cnnturkcanli-hd",           color:"#660000" },
+    { name:"A Haber",      slug:"ahaber-canli",              color:"#8b0000" },
+    { name:"TRT Haber",    slug:"trthabercanli-hd",          color:"#00204e" },
+    { name:"Habertürk",    slug:"haberturkcanli-hd-izle",    color:"#001a33" },
+    { name:"Sözcü TV",     slug:"sozcutvcanli-hd",           color:"#550000" },
+    { name:"Halk TV",      slug:"halk-tv-canli-kesintisiz",  color:"#660000" },
+    { name:"Flash Haber",  slug:"flashhaber-canli",          color:"#441100" },
+    { name:"Haber Global", slug:"haberglobal-canli-hd",      color:"#003355" },
+    { name:"Tele1",        slug:"tele1canli-hd",             color:"#002200" },
+    { name:"Kanal 24",     slug:"kanal24-canli-hd",          color:"#220033" },
+    { name:"TGRT Haber",   slug:"tgrthabercanli-hd",         color:"#001133" },
+    { name:"TV100",        slug:"tv100-hd",                  color:"#330011" },
+    { name:"Bloomberg HT", slug:"bloomberght-hd-live",       color:"#001122" },
+    { name:"Ulusal Kanal", slug:"ulusalkanal",               color:"#222200" },
+  ]},
+  { id:"spor", label:"⚽ Spor Kanalları", cat:"spor", channels:[
+    { name:"TRT Spor",        slug:"trtsporcanli-izle",      color:"#00204e" },
+    { name:"TRT Spor Yıldız", slug:"trtsporyildiz-hd",       color:"#003377" },
+    { name:"A Spor",          slug:"asporcanli",             color:"#880000" },
+    { name:"BeIN Spor Hab.",  slug:"beinsportshaber-hd",     color:"#004488" },
+    { name:"CBC Sport",       slug:"cbcsport-hd",            color:"#002244" },
+    { name:"GS TV",           slug:"gstv",                   color:"#221100" },
+    { name:"FB TV",           slug:"fbtv",                   color:"#002244" },
+    { name:"Beşiktaş TV",     slug:"besiktastv",             color:"#0d0d0d" },
+    { name:"Sports TV",       slug:"sportstv",               color:"#001133" },
+    { name:"Tivibu Spor",     slug:"tivibusporcanli-hd",     color:"#003300" },
+  ]},
+  { id:"muzik", label:"🎵 Müzik Kanalları", cat:"muzik", channels:[
+    { name:"Kral TV",       slug:"kral-tv-canli-hd",        color:"#330044" },
+    { name:"Kral Pop",      slug:"kral-pop-hd",             color:"#440022" },
+    { name:"TRT Müzik",     slug:"trtmuzikcanli-hd",        color:"#00204e" },
+    { name:"Dream Türk",    slug:"dreamturkcanli-hd",       color:"#220033" },
+    { name:"Power Türk TV", slug:"powerturk-tv",            color:"#441100" },
+    { name:"Number One TV", slug:"number-one-tv",           color:"#440000" },
+    { name:"Power TV",      slug:"powertv",                 color:"#330000" },
+  ]},
+  { id:"cocuk", label:"🎠 Çocuk Kanalları", cat:"cocuk", channels:[
+    { name:"TRT Çocuk",      slug:"trtcocuk-canli-hd",      color:"#004400" },
+    { name:"Cartoon Network",slug:"cartoonnetwork",          color:"#003344" },
+    { name:"Minika Çocuk",   slug:"minikacocuk-hd",         color:"#440044" },
+    { name:"Minika Go",      slug:"minikago-canli-hd",      color:"#330033" },
+    { name:"Planet Çocuk",   slug:"planetcocuk",            color:"#003300" },
+    { name:"Disney Channel", slug:"disneychannel-izle",     color:"#000044" },
+  ]},
+  { id:"diger", label:"📡 Diğer Kanallar", cat:"all", channels:[
+    { name:"TRT World",    slug:"trtworldcanlihd",           color:"#00204e" },
+    { name:"TRT Belgesel", slug:"trtbelgesel-canli-izle",    color:"#001133" },
+    { name:"TRT Avaz",     slug:"trtavaz-canli-hd",          color:"#002244" },
+    { name:"Beyaz TV",     slug:"beyaztvcanli",              color:"#001111" },
+    { name:"A2 TV",        slug:"a2tv-canli-kesintisiz",     color:"#220011" },
+    { name:"TV 360",       slug:"tv360-canli-hd",            color:"#220022" },
+    { name:"Diyanet TV",   slug:"diyanettv",                 color:"#002211" },
+    { name:"İBB TV",       slug:"ibbtv",                    color:"#001122" },
+  ]}
+];
 
-// Active state
-let currentSlug = '';
-let currentYayin = 1;
-let currentQuality = '720';
-let overlayTimer = null;
-let focusedEl = null;
-let currentScreen = 'home';
-
-// DOM refs
-const homeScreen    = document.getElementById('home-screen');
-const playerScreen  = document.getElementById('player-screen');
-const iframe        = document.getElementById('channel-iframe');
-const overlay       = document.getElementById('player-overlay');
-const loadingEl     = document.getElementById('player-loading');
-const loadingName   = document.getElementById('loading-name');
-const playerName    = document.getElementById('player-channel-name');
-const backBtn       = document.getElementById('back-btn');
-
-// ─── BUILD HOME ──────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// BUILD HOME GRID
+// ═══════════════════════════════════════════════════
 function buildHome() {
-  const container = document.getElementById('channels-container');
+  const container = document.getElementById('content-area');
   container.innerHTML = '';
+  const activeCat = document.querySelector('.nav-link.active')?.dataset.cat || 'all';
 
-  const activeCat = document.querySelector('.nav-tab.active-cat')?.dataset.cat || 'all';
+  SECTIONS.forEach(sec => {
+    if (activeCat !== 'all' && sec.cat !== activeCat) return;
 
-  for (const [key, section] of Object.entries(CHANNELS)) {
-    // Filter by category
-    if (activeCat !== 'all' && section.cat !== activeCat && activeCat !== section.cat) {
-      // Check if any channel in section matches
-      const hasMatch = section.channels.length > 0;
-      if (section.cat !== activeCat) continue;
-    }
-
-    const row = document.createElement('div');
-    row.className = 'row-section';
-    row.dataset.section = key;
-
-    row.innerHTML = `
-      <div class="row-title">
-        <div class="row-title-accent"></div>
-        ${section.label}
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row';
+    rowDiv.innerHTML = `
+      <div class="row-header">
+        <div class="row-title">${sec.label}</div>
+        <div class="row-count">${sec.channels.length}</div>
       </div>
-      <div class="channel-row" id="row-${key}"></div>
+      <div class="channel-row" id="row-${sec.id}"></div>
     `;
+    container.appendChild(rowDiv);
 
-    container.appendChild(row);
-
-    const channelRow = row.querySelector('.channel-row');
-    section.channels.forEach((ch, i) => {
+    const row = rowDiv.querySelector('.channel-row');
+    sec.channels.forEach((ch, i) => {
       const card = document.createElement('div');
       card.className = 'channel-card';
+      card.tabIndex = 0;
       card.dataset.slug = ch.slug;
       card.dataset.name = ch.name;
-      card.tabIndex = 0;
-      card.setAttribute('data-section', key);
-      card.setAttribute('data-idx', i);
+      card.dataset.section = sec.id;
+      card.dataset.idx = i;
+
+      const pageUrl = `https://www.canlitv.me/live/${ch.slug}`;
+      const logoUrl = `https://www.canlitv.me/resim/${ch.slug}.png`;
 
       card.innerHTML = `
-        <div class="channel-card-bg" style="background: linear-gradient(135deg, ${ch.color} 0%, transparent 70%)"></div>
-        <div class="channel-logo-container">
-          <div class="channel-logo-text">${ch.name}</div>
+        <div class="card-color-layer" style="background: linear-gradient(135deg, ${ch.color} 0%, #0d0d0d 100%)"></div>
+        <div class="card-inner">
+          <div class="card-logo-wrap">
+            <div class="card-name-text">${ch.name}</div>
+          </div>
+          <div class="card-name-sub">${ch.name}</div>
         </div>
-        <div class="channel-name">${ch.name}</div>
         <div class="live-badge">CANLI</div>
+        <div class="play-overlay"><div class="play-icon">▶</div></div>
       `;
 
-      card.addEventListener('click', () => openChannel(ch.slug, ch.name));
-      card.addEventListener('focus', () => { focusedEl = card; });
-      channelRow.appendChild(card);
+      // Probeer logo te laden
+      const img = new Image();
+      img.onload = () => {
+        const wrap = card.querySelector('.card-logo-wrap');
+        wrap.innerHTML = `<img class="card-logo-img" src="${img.src}" alt="${ch.name}">`;
+      };
+      img.src = logoUrl;
+
+      // KLIK → open via Android bridge → PlayerActivity
+      card.addEventListener('click', () => {
+        showToast(`${ch.name} açılıyor…`);
+        if (window.TVBridge) {
+          // Roep de Android Java bridge aan — opent PlayerActivity
+          window.TVBridge.openChannel(pageUrl, ch.name, img.complete ? img.src : '');
+        } else {
+          // Fallback voor testen in browser: navigeer direct
+          window.location.href = pageUrl;
+        }
+      });
+
+      row.appendChild(card);
     });
-  }
-}
-
-// ─── CATEGORY FILTER ─────────────────────────────────────────
-document.getElementById('cat-tabs').addEventListener('click', (e) => {
-  const tab = e.target.closest('.nav-tab');
-  if (!tab) return;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-cat'));
-  tab.classList.add('active-cat');
-  buildHome();
-});
-
-// ─── OPEN CHANNEL ────────────────────────────────────────────
-function openChannel(slug, name) {
-  currentSlug = slug;
-  currentYayin = 1;
-
-  // Show player
-  homeScreen.classList.remove('active');
-  playerScreen.classList.add('active');
-  currentScreen = 'player';
-
-  // Reset yayin tabs
-  document.querySelectorAll('.yayin-tab').forEach((t, i) => {
-    t.classList.toggle('active', i === 0);
-    t.classList.remove('focused');
   });
-
-  // Load
-  loadingName.textContent = name.toUpperCase();
-  playerName.textContent = name.toUpperCase();
-  loadingEl.classList.remove('hidden');
-  overlay.classList.remove('visible');
-
-  loadIframe(slug, 1);
-  showToast(`${name} açılıyor...`);
-
-  // Auto-focus back btn after load
-  setTimeout(() => backBtn.focus(), 600);
 }
 
-// ─── LOAD IFRAME ─────────────────────────────────────────────
-function loadIframe(slug, yayin) {
-  const url = `https://www.canlitv.me/live/${slug}/${yayin}`;
-  iframe.src = url;
-
-  iframe.onload = () => {
-    setTimeout(() => {
-      loadingEl.classList.add('hidden');
-    }, 800);
-  };
-
-  // Fallback timeout
+// ═══════════════════════════════════════════════════
+// CATEGORY FILTER
+// ═══════════════════════════════════════════════════
+document.getElementById('cat-nav').addEventListener('click', e => {
+  const link = e.target.closest('.nav-link');
+  if (!link) return;
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  link.classList.add('active');
+  buildHome();
   setTimeout(() => {
-    loadingEl.classList.add('hidden');
-  }, 4000);
-}
-
-// ─── YAYIN TABS ──────────────────────────────────────────────
-document.getElementById('yayin-tabs').addEventListener('click', (e) => {
-  const tab = e.target.closest('.yayin-tab');
-  if (!tab) return;
-
-  const yayin = parseInt(tab.dataset.yayin);
-  currentYayin = yayin;
-
-  document.querySelectorAll('.yayin-tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-
-  loadingEl.classList.remove('hidden');
-  loadingEl.style.opacity = '1';
-  loadingEl.style.pointerEvents = 'all';
-
-  loadIframe(currentSlug, yayin);
-  showToast(`${yayin}. Yayın yükleniyor...`);
+    const first = document.querySelector('.channel-card');
+    if (first) first.focus();
+  }, 50);
 });
 
-// ─── QUALITY TABS ────────────────────────────────────────────
-document.getElementById('quality-tabs').addEventListener('click', (e) => {
-  const tab = e.target.closest('.quality-tab');
-  if (!tab) return;
-
-  currentQuality = tab.dataset.q;
-  document.querySelectorAll('.quality-tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-  showToast(`Kalite: ${currentQuality}`);
-  // Quality is informational – actual quality depends on source stream
-});
-
-// ─── BACK BUTTON ─────────────────────────────────────────────
-backBtn.addEventListener('click', goHome);
-function goHome() {
-  playerScreen.classList.remove('active');
-  homeScreen.classList.add('active');
-  currentScreen = 'home';
-  iframe.src = 'about:blank';
-  loadingEl.classList.remove('hidden');
-  overlay.classList.remove('visible');
-}
-
-// ─── OVERLAY TOGGLE ──────────────────────────────────────────
-playerScreen.addEventListener('click', (e) => {
-  if (e.target === playerScreen || e.target.id === 'iframe-wrapper' || e.target.id === 'channel-iframe') {
-    toggleOverlay();
-  }
-});
-
-function toggleOverlay() {
-  if (overlay.classList.contains('visible')) {
-    overlay.classList.remove('visible');
-  } else {
-    overlay.classList.add('visible');
-    resetOverlayTimer();
-  }
-}
-
-function showOverlay() {
-  overlay.classList.add('visible');
-  resetOverlayTimer();
-}
-
-function resetOverlayTimer() {
-  clearTimeout(overlayTimer);
-  overlayTimer = setTimeout(() => {
-    overlay.classList.remove('visible');
-  }, 5000);
-}
-
-// ─── KEYBOARD / TV REMOTE NAVIGATION ─────────────────────────
-document.addEventListener('keydown', (e) => {
+// ═══════════════════════════════════════════════════
+// KEYBOARD NAVIGATIE (TV afstandsbediening)
+// ═══════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
   const key = e.key;
-
-  if (currentScreen === 'home') {
-    handleHomeKeys(e, key);
-  } else {
-    handlePlayerKeys(e, key);
-  }
-});
-
-function handleHomeKeys(e, key) {
-  const focusable = Array.from(document.querySelectorAll(
-    '#home-screen .nav-tab, #home-screen .channel-card'
-  )).filter(el => el.offsetParent !== null);
-
-  const current = document.activeElement;
-  const idx = focusable.indexOf(current);
+  const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+  const cards = Array.from(document.querySelectorAll('.channel-card'));
+  const cur = document.activeElement;
 
   if (key === 'Enter' || key === ' ') {
     e.preventDefault();
-    if (current.classList.contains('channel-card')) {
-      openChannel(current.dataset.slug, current.dataset.name);
-    } else if (current.classList.contains('nav-tab')) {
-      current.click();
+    if (cur.classList.contains('channel-card')) cur.click();
+    else if (cur.classList.contains('nav-link')) cur.click();
+    return;
+  }
+
+  const isCard = cur.classList.contains('channel-card');
+  const isNav  = cur.classList.contains('nav-link');
+
+  if (key === 'ArrowDown') {
+    e.preventDefault();
+    if (isNav) {
+      const first = cards[0];
+      if (first) { first.focus(); first.scrollIntoView({ block: 'nearest' }); }
+    } else if (isCard) {
+      const rows = Array.from(document.querySelectorAll('.channel-row'));
+      const curRow = cur.parentElement;
+      const rowIdx = rows.indexOf(curRow);
+      const colIdx = Array.from(curRow.children).indexOf(cur);
+      if (rowIdx < rows.length - 1) {
+        const nextCards = Array.from(rows[rowIdx + 1].querySelectorAll('.channel-card'));
+        const t = nextCards[Math.min(colIdx, nextCards.length - 1)];
+        if (t) { t.focus(); t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      }
     }
     return;
   }
 
-  if (key === 'ArrowRight' && idx >= 0 && idx < focusable.length - 1) {
+  if (key === 'ArrowUp') {
+    e.preventDefault();
+    if (isCard) {
+      const rows = Array.from(document.querySelectorAll('.channel-row'));
+      const curRow = cur.parentElement;
+      const rowIdx = rows.indexOf(curRow);
+      const colIdx = Array.from(curRow.children).indexOf(cur);
+      if (rowIdx > 0) {
+        const prevCards = Array.from(rows[rowIdx - 1].querySelectorAll('.channel-card'));
+        const t = prevCards[Math.min(colIdx, prevCards.length - 1)];
+        if (t) { t.focus(); t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      } else {
+        navLinks[0]?.focus();
+      }
+    }
+    return;
+  }
+
+  // Links/rechts navigeren
+  const focusable = [...navLinks, ...cards].filter(el => el.offsetParent !== null);
+  const idx = focusable.indexOf(cur);
+  if (key === 'ArrowRight' && idx < focusable.length - 1) {
     e.preventDefault();
     focusable[idx + 1].focus();
     focusable[idx + 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    return;
-  }
-
-  if (key === 'ArrowLeft' && idx > 0) {
-    e.preventDefault();
-    focusable[idx - 1].focus();
-    focusable[idx - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    return;
-  }
-
-  if (key === 'ArrowDown' || key === 'ArrowUp') {
-    e.preventDefault();
-    // Find cards in rows and navigate vertically
-    const cards = Array.from(document.querySelectorAll('#home-screen .channel-card'));
-    const rows = Array.from(document.querySelectorAll('.channel-row'));
-
-    const currentCard = current.classList.contains('channel-card') ? current : null;
-    if (!currentCard) {
-      // From nav tabs, go to first card
-      if (key === 'ArrowDown' && cards.length > 0) {
-        cards[0].focus();
-        cards[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      return;
-    }
-
-    const currentRow = currentCard.parentElement;
-    const rowIdx = rows.indexOf(currentRow);
-    const colIdx = Array.from(currentRow.children).indexOf(currentCard);
-
-    if (key === 'ArrowDown' && rowIdx < rows.length - 1) {
-      const nextRow = rows[rowIdx + 1];
-      const nextCards = Array.from(nextRow.children).filter(c => c.classList.contains('channel-card'));
-      const targetIdx = Math.min(colIdx, nextCards.length - 1);
-      if (nextCards[targetIdx]) {
-        nextCards[targetIdx].focus();
-        nextCards[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    } else if (key === 'ArrowUp' && rowIdx > 0) {
-      const prevRow = rows[rowIdx - 1];
-      const prevCards = Array.from(prevRow.children).filter(c => c.classList.contains('channel-card'));
-      const targetIdx = Math.min(colIdx, prevCards.length - 1);
-      if (prevCards[targetIdx]) {
-        prevCards[targetIdx].focus();
-        prevCards[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    } else if (key === 'ArrowUp' && rowIdx === 0) {
-      // Go to nav tabs
-      const navTabs = document.querySelectorAll('.nav-tab');
-      if (navTabs.length) navTabs[0].focus();
-    }
-  }
-}
-
-function handlePlayerKeys(e, key) {
-  if (key === 'Backspace' || key === 'Escape' || key === 'GoBack') {
-    e.preventDefault();
-    if (overlay.classList.contains('visible')) {
-      overlay.classList.remove('visible');
-    } else {
-      goHome();
-    }
-    return;
-  }
-
-  if (key === 'Enter' || key === ' ') {
-    const active = document.activeElement;
-    if (active && active !== document.body) {
-      e.preventDefault();
-      active.click();
-      return;
-    }
-    // Toggle overlay
-    e.preventDefault();
-    toggleOverlay();
-    return;
-  }
-
-  // Show overlay on any key
-  showOverlay();
-
-  if (!overlay.classList.contains('visible')) return;
-
-  const focusable = Array.from(document.querySelectorAll(
-    '#player-overlay .back-btn, #player-overlay .yayin-tab, #player-overlay .quality-tab'
-  ));
-
-  const current = document.activeElement;
-  const idx = focusable.indexOf(current);
-
-  if (key === 'ArrowRight' && idx >= 0 && idx < focusable.length - 1) {
-    e.preventDefault();
-    focusable[idx + 1].focus();
   } else if (key === 'ArrowLeft' && idx > 0) {
     e.preventDefault();
     focusable[idx - 1].focus();
-  } else if (key === 'ArrowDown') {
-    e.preventDefault();
-    // Move from back btn or yayin to quality row
-    const yayinTabs = Array.from(document.querySelectorAll('.yayin-tab'));
-    const qualityTabs = Array.from(document.querySelectorAll('.quality-tab'));
-
-    if (current === backBtn || yayinTabs.includes(current)) {
-      // Go to quality tabs
-      const activeQ = document.querySelector('.quality-tab.active') || qualityTabs[0];
-      if (activeQ) activeQ.focus();
-    }
-  } else if (key === 'ArrowUp') {
-    e.preventDefault();
-    const qualityTabs = Array.from(document.querySelectorAll('.quality-tab'));
-    if (qualityTabs.includes(current)) {
-      // Go to yayin tabs
-      const activeY = document.querySelector('.yayin-tab.active') || document.querySelector('.yayin-tab');
-      if (activeY) activeY.focus();
-    } else {
-      backBtn.focus();
-    }
-  }
-
-  if (idx >= 0) {
-    focusable[idx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-}
-
-// Android TV Back button (via keycode 4 / 27)
-window.addEventListener('keyup', (e) => {
-  if (e.keyCode === 4 || e.key === 'Back') {
-    if (currentScreen === 'player') goHome();
+    focusable[idx - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   }
 });
 
-// ─── FOCUS STYLES (add/remove class) ─────────────────────────
-document.addEventListener('focusin', (e) => {
-  const el = e.target;
-  el.classList.add('focused');
-});
+// Focus styling
+document.addEventListener('focusin',  e => e.target.classList.add('focused'));
+document.addEventListener('focusout', e => e.target.classList.remove('focused'));
 
-document.addEventListener('focusout', (e) => {
-  const el = e.target;
-  el.classList.remove('focused');
-});
-
-// ─── TOAST ───────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
 let toastTimer;
 function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ─── INIT ────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
 buildHome();
-
-// Set initial focus
 setTimeout(() => {
-  const firstCard = document.querySelector('.channel-card');
-  if (firstCard) firstCard.focus();
-}, 100);
+  const first = document.querySelector('.channel-card');
+  if (first) first.focus();
+}, 150);
 </script>
 </body>
 </html>
