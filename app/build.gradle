@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.canlitv.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.canlitv.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 2
+        versionName "2.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'androidx.leanback:leanback:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // ExoPlayer for HLS/stream playback
+    implementation 'androidx.media3:media3-exoplayer:1.2.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.2.1'
+    implementation 'androidx.media3:media3-ui:1.2.1'
+    // Glide for image loading (channel logos)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    // OkHttp for scraping
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}
