@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient());
+        
+        // Add TVBridge for channel loading
+        webView.addJavascriptInterface(new TVBridge(this), "TVBridge");
 
         webView.loadUrl("file:///android_asset/canlitv_app.html");
     }
@@ -37,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            webView.evaluateJavascript(
-                "if(typeof currentScreen!=='undefined'&&currentScreen==='player'){goHome();}",
-                null
-            );
-            return true;
+            if (webView.canGoBack()) {
+                webView.goBack();
+                return true;
+            } else {
+                finish();
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
