@@ -5,11 +5,20 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- ExoPlayer view -->
     <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:focusable="true" />
+
+    <!-- WebView fallback -->
+    <WebView
+        android:id="@+id/playerWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <!-- Channel info overlay (top) -->
     <LinearLayout
