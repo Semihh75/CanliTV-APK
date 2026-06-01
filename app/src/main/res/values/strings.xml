@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">CanliTV</string>
-    <string name="loading">Kanallar yükleniyor...</string>
-    <string name="error_loading">Kanallar yüklenemedi. Tekrar deneyin.</string>
-    <string name="retry">Tekrar Dene</string>
-    <string name="live">CANLI</string>
-</resources>
