@@ -1,4 +1,4 @@
-package com.example.canlitvapk;
+package com.canlitv.app;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -31,21 +31,18 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient());
 
-        // Laad de lokale HTML app
         webView.loadUrl("file:///android_asset/canlitv_app.html");
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TV remote Back knop
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             webView.evaluateJavascript(
-                "if(currentScreen==='player'){goHome();}else{window.androidBack && window.androidBack();}",
+                "if(typeof currentScreen!=='undefined'&&currentScreen==='player'){goHome();}",
                 null
             );
             return true;
         }
-        // Stuur alle pijltjestoetsen door naar de WebView
         return super.onKeyDown(keyCode, event);
     }
 
